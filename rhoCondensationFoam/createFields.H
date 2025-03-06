@@ -10,6 +10,11 @@ PtrList<volScalarField>& Y = composition.Y();
 
 //Find the water field and give us seperate access
 volScalarField* pYliquidH2O;
+volScalarField* pYVapourH2O;
+
+label idLiquidH2O = 999; //Identifier label for liquidH2O so we can addapt its transport equation
+label idVapourH2O = 999;
+
 forAll(Y, i)
 {
     volScalarField& Yi = Y[i];
@@ -17,9 +22,16 @@ forAll(Y, i)
     {
         Info << "Found liquid water phase " << endl;
         pYliquidH2O = &Yi;
+        idLiquidH2O = i;
+    }else if(Yi.name() == word("vapourH2O"))
+    {
+        Info << "Found vapour water phase " << endl;
+        pYVapourH2O = &Yi;
+        idVapourH2O = i;
     }
 }
-volScalarField& YliquidH2O = *pYliquidH2O;
+volScalarField& YLiquidH2O = *pYliquidH2O;
+volScalarField& YVapourH2O = *pYVapourH2O;
 
             
 const word inertSpecie(thermo.get<word>("inertSpecie"));
@@ -84,11 +96,7 @@ autoPtr<CombustionModel<rhoReactionThermo>> reaction
     CombustionModel<rhoReactionThermo>::New(thermo, turbulence())
 );
 
-Info << "Made it after combustion model";
-
 multivariateSurfaceInterpolationScheme<scalar>::fieldTable fields;
-
-Info << "Made it after surface interpolation";
 
 forAll(Y, i)
 {
@@ -96,7 +104,6 @@ forAll(Y, i)
 }
 fields.add(thermo.he());
 
-Info << "Made it after we added stuff";
 
 volScalarField Qdot
 (
@@ -112,8 +119,6 @@ volScalarField Qdot
     dimensionedScalar(dimEnergy/dimVolume/dimTime, Zero)
 );
 
-Info << "Made it to after Qdot " << endl;
-
 #include "createDpdt.H"
 
 #include "createK.H"
@@ -125,4 +130,19 @@ const dimensionedScalar rhoMin("rhoMin", dimDensity, Zero, pimple.dict());
 
 #include "createFvOptions.H"
 
-Info << "Made it through set fields " << endl;
+//Create Custom Fields
+
+volScalarField pVapourH2O //Partial pressure of the water vapour phase
+(
+    IOobject
+    (
+        "pVapourH2O",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar(dimPressure, Zero)
+);
+
