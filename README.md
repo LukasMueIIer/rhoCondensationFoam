@@ -1,6 +1,12 @@
 # rhoCondensationFoam
 A derivative of rhoReactingFoam, with the goal of simulating particle loaded flows with condensation (and maybe icing).
 
+## Assumptions
+For now the goal is to keep the model very simple so the following simplifications are made:
+1. The particles do not interact with each other (low particle density)
+2. The Influence of the particles on turbulence is neglected (could be handled by adding a source term to the turbulence equations)
+3. The Particles share the same velocity as the flow (assumes small stokes number)
+
 ## Examples
 Contains some test cases for the solver. All is based on a python workflow for automated simulation execution.
 Requires a python environment with:

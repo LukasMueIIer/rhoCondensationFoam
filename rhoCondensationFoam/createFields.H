@@ -102,3 +102,17 @@ const dimensionedScalar rhoMax("rhoMax", dimDensity, GREAT, pimple.dict());
 const dimensionedScalar rhoMin("rhoMin", dimDensity, Zero, pimple.dict());
 
 #include "createFvOptions.H"
+
+//Create additional fields
+volScalarField Ywater
+(
+    IOobject
+    (
+        "water",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
