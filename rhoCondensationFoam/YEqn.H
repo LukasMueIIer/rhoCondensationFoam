@@ -20,6 +20,9 @@ tmp<fv::convectionScheme<scalar>> mvConvection
         {
             volScalarField& Yi = Y[i];
 
+            //TODO Add a check what fraction here is water + ice in the future 
+            //and then execute another equation
+
             fvScalarMatrix YiEqn
             (
                 fvm::ddt(rho, Yi)

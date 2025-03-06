@@ -8,6 +8,20 @@ thermo.validate(args.executable(), "h", "e");
 basicSpecieMixture& composition = thermo.composition();
 PtrList<volScalarField>& Y = composition.Y();
 
+//Find the water field and give us seperate access
+volScalarField* pYliquidH2O;
+forAll(Y, i)
+{
+    volScalarField& Yi = Y[i];
+    if(Yi.name() == word("liquidH2O"))
+    {
+        Info << "Found liquid water phase " << endl;
+        pYliquidH2O = &Yi;
+    }
+}
+volScalarField& YliquidH2O = *pYliquidH2O;
+
+            
 const word inertSpecie(thermo.get<word>("inertSpecie"));
 if (!composition.species().found(inertSpecie))
 {
@@ -70,13 +84,19 @@ autoPtr<CombustionModel<rhoReactionThermo>> reaction
     CombustionModel<rhoReactionThermo>::New(thermo, turbulence())
 );
 
+Info << "Made it after combustion model";
+
 multivariateSurfaceInterpolationScheme<scalar>::fieldTable fields;
+
+Info << "Made it after surface interpolation";
 
 forAll(Y, i)
 {
     fields.add(Y[i]);
 }
 fields.add(thermo.he());
+
+Info << "Made it after we added stuff";
 
 volScalarField Qdot
 (
@@ -92,6 +112,8 @@ volScalarField Qdot
     dimensionedScalar(dimEnergy/dimVolume/dimTime, Zero)
 );
 
+Info << "Made it to after Qdot " << endl;
+
 #include "createDpdt.H"
 
 #include "createK.H"
@@ -103,16 +125,4 @@ const dimensionedScalar rhoMin("rhoMin", dimDensity, Zero, pimple.dict());
 
 #include "createFvOptions.H"
 
-//Create additional fields
-volScalarField Ywater
-(
-    IOobject
-    (
-        "water",
-        runTime.timeName(),
-        mesh,
-        IOobject::MUST_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh
-);
+Info << "Made it through set fields " << endl;

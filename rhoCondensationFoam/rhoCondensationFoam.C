@@ -129,6 +129,9 @@ int main(int argc, char *argv[])
 
         rho = thermo.rho();
 
+        Info << "Correcting density for incompressible phases" << nl << endl;
+        rho = rho / (1 - YliquidH2O);
+
         runTime.write();
 
         runTime.printExecutionTime(Info);
