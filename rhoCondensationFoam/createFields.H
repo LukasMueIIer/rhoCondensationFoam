@@ -49,7 +49,22 @@ volScalarField rho
     (
         "rho",
         runTime.timeName(),
-        mesh
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    thermo.rho()
+);
+
+volScalarField rhoVapour
+(
+    IOobject
+    (
+        "rhoVapour",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
     ),
     thermo.rho()
 );
@@ -144,5 +159,33 @@ volScalarField pVapourH2O //Partial pressure of the water vapour phase
     ),
     mesh,
     dimensionedScalar(dimPressure, Zero)
+);
+
+volScalarField pSaturationLiquidH2O //Local saturation Pressure wrt. Water
+(
+    IOobject
+    (
+        "pSaturationLiquidH2O",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar(dimPressure, Zero)
+);
+
+volScalarField SaturationLiquidH2O //Local saturation Pressure wrt. Water
+(
+    IOobject
+    (
+        "SaturationLiquidH2O",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh,
+    dimensionedScalar(dimless, Zero)
 );
 
