@@ -15,7 +15,14 @@ ddtSchemes
 }
 
 gradSchemes
-{
+{ //limiting the R gradients
+  grad(R.component(0)) cellLimited leastSquares 1;
+  grad(R.component(1)) cellLimited leastSquares 1;
+  grad(R.component(2)) cellLimited leastSquares 1;
+  grad(R.component(3)) cellLimited leastSquares 1;
+  grad(R.component(4)) cellLimited leastSquares 1;
+  grad(R.component(5)) cellLimited leastSquares 1;
+
   default leastSquares;
 }
 
@@ -27,7 +34,7 @@ divSchemes
   div(phi,K) $scalars;
   div(phi,h) $scalars;
   div(phi,k) $scalars;
-  div(phi,R) $scalars;
+  div(phi,R) upwind; //could try upwind
   div(phi,Ekp) $scalars;
   div(phi,e) $scalars;
   div(phi,omega) $scalars;
