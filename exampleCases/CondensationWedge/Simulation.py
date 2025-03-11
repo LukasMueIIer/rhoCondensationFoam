@@ -22,6 +22,7 @@ def Simulation(dir_path):
     sim_master = Sim_Master.sim_master(dir_path,4)  #general sim_master which is used to execute simulations
 
     #case specific code
+    dire = SolutionDirectory(dir_path)
 
     #run steady state simulation
     sf_sim = Sim_Master.sim_step(solver="rhoCondensationFoam",silent=False)
@@ -120,7 +121,7 @@ def Simulation(dir_path):
     turb.writeFile()
 
     #run solver agian
-    sf_sim = Sim_Master.sim_step(solver="rhoSimpleCondensationFoam",silent=False)
+    sf_sim = Sim_Master.sim_step(solver="rhoCondensationFoam",silent=False)
     sf_sim.time = 10    #simulate 10 steps
     sf_sim.dT = 0.001
     sf_sim.writeInterval = 0.1    #write every step
@@ -135,7 +136,7 @@ def Simulation(dir_path):
     turb.writeFile()
 
     #run solver agian
-    sf_sim = Sim_Master.sim_step(solver="rhoSimpleCondensationFoam",silent=False)
+    sf_sim = Sim_Master.sim_step(solver="rhoCondensationFoam",silent=False)
     sf_sim.time = 10    #simulate 10 steps
     sf_sim.dT = 0.001
     sf_sim.writeInterval = 0.1    #write every step
