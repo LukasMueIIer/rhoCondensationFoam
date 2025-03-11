@@ -1,0 +1,37 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  8
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      gridCondensationExtractDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//The grid consists of 4 corner points:
+//origin
+//origin + direction1
+//origin + direction2
+//origin + direction1 + direction2
+
+gridShape
+(
+    origin  (1e-5 1e-5 0)
+    direction1 (3 0 0)
+    direction2 (0 0.3 0)
+);
+
+gridResolution
+(
+    stepsDirection1 100
+    stepsDirection2 100
+);
+
+// ************************************************************************* //
