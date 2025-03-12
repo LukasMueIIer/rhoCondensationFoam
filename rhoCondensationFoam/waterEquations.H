@@ -31,4 +31,4 @@ pow(10, -7.90298*(fracT/T-1)
 
 Info << "Calculating Saturations " << nl << endl;
 
-SaturationLiquidH2O = pVapourH2O / (pos(pSaturationLiquidH2O) * pSaturationLiquidH2O + 0.01); //Make sure we never divide by 0
+SaturationLiquidH2O = pVapourH2O / (pos(pSaturationLiquidH2O) * pSaturationLiquidH2O + dimensionedScalar(dimPressure,0.01)); //Make sure we never divide by 0
