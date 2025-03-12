@@ -9,11 +9,12 @@ from PyFoam.RunDictionary.SolutionDirectory import SolutionDirectory
 from PyFoam.RunDictionary.ParsedParameterFile import ParsedParameterFile
 import numpy as np
 import math
+import sys
 
 #custom functions
 import time
 
-def PreProcessing(dir_path):    
+def PreProcessing(dir_path,coreCount):    
     #dir_path is the path of the directory in which simulation will be done
     if not os.path.isdir(dir_path):
         print("Passed working directory path is NOT valid!")
@@ -255,7 +256,7 @@ def PreProcessing(dir_path):
     general.paraFoam(dir_path,silent=False)
 
     #decompose
-    general.decompose(dir_path,4,silent=False)
+    general.decompose(dir_path,coreCount,silent=False)
 
     return 0 #return 0 if ran sucessfully
 
@@ -267,9 +268,9 @@ if __name__ == "__main__":
     #get working directory
     dir_path = general.get_start_path()
 
+    coreCount = sys.argv[1]
 
-
-    pp_state = PreProcessing(dir_path)
+    pp_state = PreProcessing(dir_path,coreCount)
 
 
 

@@ -5,6 +5,7 @@ from FoamFunctions.Tools import general
 from FoamFunctions.Solvers import Sim_Master
 import os
 import shutil
+import sys
 
 from PyFoam.RunDictionary.SolutionDirectory import SolutionDirectory
 from PyFoam.RunDictionary.ParsedParameterFile import ParsedParameterFile
@@ -13,13 +14,13 @@ from PyFoam.RunDictionary.ParsedParameterFile import ParsedParameterFile
 from PyFoam.Execution.ParallelExecution import LAMMachine
 #custom functions
 
-def Simulation(dir_path):
+def Simulation(dir_path,coreCount):
     #dir_path is the path of the directory in which simulation will be done
     if not os.path.isdir(dir_path):
         print("Passed working directory path is NOT valid!")
         return 1
   
-    sim_master = Sim_Master.sim_master(dir_path,4)  #general sim_master which is used to execute simulations
+    sim_master = Sim_Master.sim_master(dir_path,coreCount)  #general sim_master which is used to execute simulations
 
     #case specific code
     dire = SolutionDirectory(dir_path)
@@ -106,7 +107,7 @@ def Simulation(dir_path):
 
     delete_processor_folders(dir_path)
     
-    general.decompose(dir_path,4,silent=False)
+    general.decompose(dir_path,coreCount,silent=False)
 
     #addapt turbulence model and relaxation
     #set Relaxation
