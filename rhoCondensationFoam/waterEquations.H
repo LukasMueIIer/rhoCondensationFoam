@@ -17,13 +17,16 @@ rhoVapour = rho * YVapourH2O;
 Info << "Updating Saturation pressures " << nl << endl;
 
 dimensionedScalar fracT("fractTvapour",dimTemperature,373.16); //A often used Temperature value for the calculation of saturation pressure
+dimensionedScalar capPressure("saturationPressureCap",dimPressure,1e5); //Used to cap the saturation pressure
 
 pSaturationLiquidH2O = 
 pow(10, -7.90298*(fracT/T-1) 
 +  5.02808 * log10(fracT/T)
 - 1.3816e-7 * (pow(10,11.344*(1-T/fracT)) - 1)
 + 8.1328e-3 * (pow(10,-3.49149*(fracT/T-1) ) - 1) 
-+ log10(dimensionedScalar(dimless,1013.246))) * dimensionedScalar("pressureFactor",dimPressure,100);
++ log10(dimensionedScalar(dimless,1013.246))) * dimensionedScalar("pressureFactor",dimPressure,100) 
+* neg(T - fracT)
++ capPressure * pos(T - fracT);
 
 
 Info << "Calculating Saturations " << nl << endl;
