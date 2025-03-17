@@ -13,10 +13,15 @@
 CORES=$((SLURM_NNODES * SLURM_TASKS_PER_NODE))
 
 # Load the required modules
-module load openfoam/v2406               
+module load openfoam/v2406 
+
+#Load the python venv. First load the original python
+module load  python/3.10.16
+source /data/lmueller/.sim_venv/bin/activate  #now source the venv          
 
 # Change into the working directory where the job was started
 cd $SLURM_SUBMIT_DIR
 
 # Run the tasks
-mpirun -np $CORES rhoSimpleFoam -parallel > foam.log
+python PreProcessing.py $CORES > PreProcessing.log
+python Simulation.py $CORES > Simulation.log
