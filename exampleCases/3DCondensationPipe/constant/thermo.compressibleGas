@@ -1,0 +1,75 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2406                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      thermo.compressibleGas;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+air // air at room temperature (293 K)
+{
+    specie
+    {
+        nMoles 1;
+        molWeight   28.9;
+    }
+    thermodynamics
+    {
+        Cp          1005;
+        Hf          0;
+    }
+    transport
+    {
+        mu          1.82e-05;
+        Pr          0.71;
+    }
+}
+
+vapourH2O
+{
+    specie
+    {
+        nMoles      1;
+        molWeight   18.9;
+    }
+    thermodynamics
+    {
+        Hf          -1.338e7; //[J/kg]
+        Cp          1900;
+    }
+    transport
+    {
+        mu          1.8e-05;
+        Pr          0.7;
+    }
+}
+
+liquidH2O
+{
+    specie
+    {
+        nMoles      1;
+        molWeight   1e10; //A large number so the contribution becomes Zero
+    }
+
+    thermodynamics
+    {
+        Hf          0; //[J/kg]
+        Cp          4000;
+    }
+    transport
+    {
+        mu          1.8e-05;
+        Pr          0.7;
+    }
+}
+
+// ************************************************************************* //
