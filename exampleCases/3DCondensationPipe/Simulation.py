@@ -35,9 +35,9 @@ def Simulation(dir_path,coreCount):
 
     #set Relaxation
     dire = SolutionDirectory(dir_path)
-    fv_Schemes = ParsedParameterFile(dire.systemDir() + "/fvSolution")
-    fv_Schemes["relaxationFactors"]["equations"]["\"(k|epsilon|omega|R)\""] = "0.7"
-    fv_Schemes.writeFile()
+    #fv_Schemes = ParsedParameterFile(dire.systemDir() + "/fvSolution")
+    #fv_Schemes["relaxationFactors"]["equations"]["\"(k|epsilon|omega|R)\""] = "0.7"
+    #fv_Schemes.writeFile()
 
     #set Turbulence Model
     turb = ParsedParameterFile(dire.constantDir() + "/turbulenceProperties")
@@ -119,9 +119,9 @@ def Simulation(dir_path,coreCount):
     #addapt turbulence model and relaxation
     #set Relaxation
     dire = SolutionDirectory(dir_path)
-    fv_Schemes = ParsedParameterFile(dire.systemDir() + "/fvSolution")
-    fv_Schemes["relaxationFactors"]["equations"]["\"(k|epsilon|omega|R)\""] = "0.7"
-    fv_Schemes.writeFile()
+    #fv_Schemes = ParsedParameterFile(dire.systemDir() + "/fvSolution")
+    #fv_Schemes["relaxationFactors"]["equations"]["\"(k|epsilon|omega|R)\""] = "0.7"
+    #fv_Schemes.writeFile()
     #set Turbulence Model
     turb = ParsedParameterFile(dire.constantDir() + "/turbulenceProperties")
     turb["RAS"]["RASModel"] = "LRR"

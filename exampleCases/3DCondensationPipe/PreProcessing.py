@@ -32,7 +32,7 @@ def PreProcessing(dir_path, coreCount):
     general.delete_time_folders(dir_path)
 
     ### Copy from OG
-    general.copy_field_files(dir_path + "/0",dir_path + "/0.org",["p","T","U","omega","k","nut","alphat","epsilon","R"])
+    general.copy_field_files(dir_path + "/0",dir_path + "/0.org",["p","T","U","omega","k","nut","alphat","epsilon","R","air","vapourH2O","liquidH2O"])
 
 
     ##create mesh
