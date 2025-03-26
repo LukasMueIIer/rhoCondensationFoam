@@ -29,6 +29,7 @@ boundaryField
   {
     type epsilonWallFunction;
     value uniform 0.000000;
+    lowReCorrection yes;
   }
   outlet
   {

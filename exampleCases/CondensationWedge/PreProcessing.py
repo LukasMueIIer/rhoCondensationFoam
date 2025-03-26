@@ -158,7 +158,8 @@ def PreProcessing(dir_path,coreCount):
     l_turb = 0.07 * 2 * ri 
     l_turb_a = 0.07 * 2 * ra
     c = 0.09
-    epsilon0 = (c**0.75 * k0 ** 1.5)/(l_turb_a)
+    kin_vis = 3.5252e-5
+    epsilon0 = c * k0**2 / (kin_vis * 10)
     epsilon9 = (c**0.75 * k9 ** 1.5)/(l_turb)
 
     par_e_file = ParsedParameterFile(dire.initialDir() + "/epsilon")
@@ -210,9 +211,13 @@ def PreProcessing(dir_path,coreCount):
 
     #Write Omega File
     C_mu = 0.09
-    w_0 = k0 ** 0.5 / ((C_mu**0.25) * pipe_lengt)
+    
+    mu = 1.4577e-5
+    rho = p0/(287 * T0)   
+
+    w_0 = rho * k0 / (mu) * (10)**-1
+
     w_9 = k9 ** 0.5 / ((C_mu**0.25) * ri)
-    w_0 = w_9
 
     par_w_file = ParsedParameterFile(dire.initialDir() + "/omega")
 

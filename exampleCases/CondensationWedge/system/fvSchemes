@@ -30,31 +30,45 @@ divSchemes
 {
   default none;
   scalars Gauss vanLeer ; 	//upwind; 	//linearUpwind default;
-  div(phi,U) Gauss blended       0.8 ;
-  div(phi,K) $scalars;
-  div(phi,h) $scalars;
-  div(phi,k) $scalars;
-  div(phi,R) upwind; //could try upwind
+  turbulence Gauss vanLeer; 
+  energy Gauss vanLeer;
+
+  div(phi,U) Gauss blended  0.8;
+
+  //Energy
+  div(phi,e) $energy;
+  div(phi,h) $energy;
+
+  //Turbulence
+  div(phi,K) $turbulence;
+  div(phi,k) $turbulence;
+
+  div(phi,R) $turbulence; //could try upwind
+  div(phi,omega) $turbulence;
+  div(phi,epsilon) $turbulence;
   div(phi,Ekp) $scalars;
-  div(phi,e) $scalars;
-  div(phi,omega) $scalars;
+  
+  
+  //scalars
+  div(phi,vapourH2O) $scalars;
+  div(Ji,Ii_h) $scalars;
+
+  //special
   div(phi,Yi_h) Gauss multivariateSelection {
         air limitedLinear01             1 ;
         h limitedLinear                 1 ;
         liquidH2O limitedLinear01       1 ;
         vapourH2O limitedLinear01       1 ;
       } ;
-  div(phi,epsilon) $scalars;
   div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear ;
-  div(Ji,Ii_h) $scalars;
   div(((rho*(thermo:mu|rho))*dev2(T(grad(U))))) Gauss linear ;
   div((rho*R)) Gauss linear ;
-  div(phi,vapourH2O) $scalars;
+  
 }
 
 laplacianSchemes
 {
-  default Gauss linear uncorrected ;
+  default Gauss linear corrected;
 }
 
 interpolationSchemes
@@ -64,7 +78,7 @@ interpolationSchemes
 
 snGradSchemes
 {
-  default corrected;
+  default limited 1.0;
 }
 
 wallDist

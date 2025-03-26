@@ -13,54 +13,81 @@ solvers
 {
   "(rho|rhoFinal)"
   {
-      solver              diagonal;
-  };
+    solver diagonal;
+  }
+
   p
   {
     solver GAMG;
-    tolerance 1e-06;
+    tolerance 5e-06;
     relTol 0.01;
     smoother GaussSeidel;
+    nPreSweeps  0;
+    nPostSweeps 2;
+    cacheAgglomeration on;
+    agglomerator  faceAreaPair;
+    nCellsInCoarsestLevel 100;
+    mergeLevels 1;
+    minIter   3;
   }
+  //p { 
+  //  solver PCG;
+  //   preconditioner DIC;
+  //    tolerance 1e-6;
+  //     relTol 0.01;
+  //  }
   pFinal
-    {
-        $p;
-        tolerance           1e-6;
-        relTol              0;
-        maxIter             100;
-    };
+  {
+    $p ;
+    tolerance 5e-06;
+    relTol 0;
+    maxIter 1000;
+  }
   "(U|Yi|k|h|epsilon|R|omega|e)"
   {
     solver PBiCGStab;
     preconditioner DILU;
-    tolerance 1e-06;
-    relTol 0.01;
-    nSweeps 1;
+    tolerance 1e-08;
+    relTol 0.0;
   }
   "(U|Yi|k|h|epsilon|R|omega|e)Final"
-    {
-        $U;
-        tolerance       1e-6;
-        relTol          0;
-    };
+  {
+    $U ;
+    tolerance 1e-08;
+    relTol 0;
+  }
 }
 
 PIMPLE
 {
   momentumPredictor yes;
-  nOuterCorrectors 1;
-  nCorrectors 2;
-  nNonOrthogonalCorrectors 0;
+
+  nOuterCorrectors 2;
+
+  nCorrectors 4;
+  
+  nNonOrthogonalCorrectors 1;
+
+  turbOnFinalIterOnly no;
+
+  residualControl
+    {
+        "(p|U)"
+        {
+            tolerance 5e-6;
+            relTol 0;
+        }
+    }
 }
 
 SIMPLE
 {
-  nNonOrthogonalCorrectors 0;
+  nNonOrthogonalCorrectors 2;
   pMinFactor 0.4;
   pMaxFactor 1.5;
   residualControl
   {
-    p 0.01;
+    p 0.001;
     U 0.0001;
     e 0.001;
     "(k|epsilon)" 0.001;
@@ -77,38 +104,8 @@ relaxationFactors
   equations
   {
     U 0.7;
-    "(k|epsilon|omega|R|chiVapour)" 0.7;
     e 0.5;
     "(CH4|O2|H2O|CO2|h).*" 1;
     "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
-    "(k|epsilon|omega|R)" 0.7;
   }
-} 	/*
-relaxationFactors
-{
-    equations
-    {
-        "(U|k).*"                   1;
-        "(CH4|O2|H2O|CO2|h).*"      1;
-    }
-} */// ************************************************************************* //
-
+} 

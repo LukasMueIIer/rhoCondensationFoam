@@ -61,5 +61,18 @@ functions
     writeControl writeTime;
     writeInterval 1;
   }
+  yPlus1
+  {
+      // Mandatory entries (unmodifiable)
+      type            yPlus;
+      libs            (fieldFunctionObjects);
+  
+      enabled yes;
+      log yes;
+      executeControl writeTime;
+      executeInterval 1;
+      writeControl writeTime;
+      writeInterval 1;
+  }
 } 	// ************************************************************************* //
 
