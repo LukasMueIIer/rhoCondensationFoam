@@ -14,6 +14,8 @@ from PyFoam.RunDictionary.ParsedParameterFile import ParsedParameterFile
 from PyFoam.Execution.ParallelExecution import LAMMachine
 #custom functions
 
+solver_str = "rhoReactingFoam"
+
 def Simulation(dir_path,coreCount):
     #dir_path is the path of the directory in which simulation will be done
     if not os.path.isdir(dir_path):
@@ -23,14 +25,19 @@ def Simulation(dir_path,coreCount):
     sim_master = Sim_Master.sim_master(dir_path,coreCount)  #general sim_master which is used to execute simulations
 
     #case specific code
-    dire = SolutionDirectory(dir_path)
 
     #run steady state simulation
-    sf_sim = Sim_Master.sim_step(solver="rhoCondensationFoam",silent=False)
+    sf_sim = Sim_Master.sim_step(solver=solver_str,silent=False)
     sf_sim.time = 10    #simulate 10 steps
     sf_sim.dT = 0.001
     sf_sim.writeInterval = 0.1    #write every step
     sf_sim.ddTSchemes = "Euler"
+
+    #set Relaxation
+    dire = SolutionDirectory(dir_path)
+    #fv_Schemes = ParsedParameterFile(dire.systemDir() + "/fvSolution")
+    #fv_Schemes["relaxationFactors"]["equations"]["\"(k|epsilon|omega|R)\""] = "0.7"
+    #fv_Schemes.writeFile()
 
     #set Turbulence Model
     turb = ParsedParameterFile(dire.constantDir() + "/turbulenceProperties")
@@ -112,39 +119,22 @@ def Simulation(dir_path,coreCount):
     #addapt turbulence model and relaxation
     #set Relaxation
     dire = SolutionDirectory(dir_path)
-    fv_Schemes = ParsedParameterFile(dire.systemDir() + "/fvSolution")
-    fv_Schemes["relaxationFactors"]["equations"]["\"(k|epsilon|omega|R)\""] = "0.3"
-    fv_Schemes.writeFile()
-
+    #fv_Schemes = ParsedParameterFile(dire.systemDir() + "/fvSolution")
+    #fv_Schemes["relaxationFactors"]["equations"]["\"(k|epsilon|omega|R)\""] = "0.7"
+    #fv_Schemes.writeFile()
     #set Turbulence Model
     turb = ParsedParameterFile(dire.constantDir() + "/turbulenceProperties")
     turb["RAS"]["RASModel"] = "LRR"
     turb.writeFile()
 
     #run solver agian
-    sf_sim = Sim_Master.sim_step(solver="rhoCondensationFoam",silent=False)
+    sf_sim = Sim_Master.sim_step(solver=solver_str,silent=False)
     sf_sim.time = 10    #simulate 10 steps
     sf_sim.dT = 0.001
     sf_sim.writeInterval = 0.1    #write every step
     sf_sim.ddTSchemes = "Euler"
 
     sim_master.execute(sf_sim)  #run the simulation
-
-
-    #set Turbulence Model
-    turb = ParsedParameterFile(dire.constantDir() + "/turbulenceProperties")
-    turb["RAS"]["RASModel"] = "SSG"
-    turb.writeFile()
-
-    #run solver agian
-    sf_sim = Sim_Master.sim_step(solver="rhoCondensationFoam",silent=False)
-    sf_sim.time = 10    #simulate 10 steps
-    sf_sim.dT = 0.001
-    sf_sim.writeInterval = 0.1    #write every step
-    sf_sim.ddTSchemes = "Euler"
-
-    sim_master.execute(sf_sim)  #run the simulation
-
 
     general.reconstruct(dir_path) #reconstruct case
     general.paraFoam(dir_path) #create paraFoam file
@@ -157,8 +147,10 @@ if __name__ == "__main__":
     print("Simulation running as standalone")
 
     #get working directory
+    coreCount = sys.argv[1]
     dir_path = general.get_start_path()
-    sim_state = Simulation(dir_path)
+    sim_state = Simulation(dir_path,coreCount)
+
     if(sim_state == 0):
         print("Simulation done sucessfully!")
     else:
